@@ -74,63 +74,23 @@ document.querySelectorAll('#past-student-profiles .past-student img').forEach((i
     image.alt = pastStudentPhotos[index][1];
   }
 });
-const anniversaryGallery = document.querySelector('#school-activities .event-card:first-child .photo-strip');
-const anniversaryPhotos = [
-  ['assets/anniversary-1.jpg', 'Students gathered on the school court for the anniversary parade'],
-  ['assets/anniversary-2.jpg', 'Students taking part in the anniversary parade'],
-  ['assets/anniversary-3.jpg', 'School community gathered for the anniversary event']
-];
-const startAutoSlideshow = gallery => {
-  if (!gallery) return;
-  if (gallery.autoSlideTimer) window.clearInterval(gallery.autoSlideTimer);
-  const showSlide = index => {
-    const images = [...gallery.querySelectorAll('img')];
-    if (!images.length) return;
-    images.forEach((image, imageIndex) => {
-      image.classList.toggle('is-active', imageIndex === index);
-      image.setAttribute('aria-hidden', imageIndex === index ? 'false' : 'true');
-    });
-    gallery.dataset.activeSlide = String(index);
-  };
+const activityGalleries = [...document.querySelectorAll('#school-activities .event-card .photo-strip')];
+activityGalleries.forEach(gallery => {
+  const images = [...gallery.querySelectorAll('img')];
+  if (images.length < 2) return;
   gallery.classList.add('is-auto-slideshow');
+  let activeIndex = 0;
+  const showSlide = index => {
+    images.forEach((image, imageIndex) => {
+      const active = imageIndex === index;
+      image.classList.toggle('is-active', active);
+      image.setAttribute('aria-hidden', String(!active));
+    });
+    activeIndex = index;
+  };
   showSlide(0);
-  gallery.autoSlideTimer = window.setInterval(() => {
-    const images = gallery.querySelectorAll('img');
-    if (images.length < 2) return;
-    const current = Number(gallery.dataset.activeSlide || 0);
-    showSlide((current + 1) % images.length);
-  }, 3500);
-};
-const useLocalGallery = (gallery, photos) => {
-  if (!gallery) return;
-  Promise.all(photos.map(([src]) => new Promise(resolve => {
-    const image = new Image();
-    image.onload = () => resolve(true);
-    image.onerror = () => resolve(false);
-    image.src = src;
-  }))).then(allLoaded => {
-    if (allLoaded.every(Boolean)) {
-      gallery.innerHTML = photos.map(([src, alt]) => `<img src="${src}" alt="${alt}">`).join('');
-    }
-    startAutoSlideshow(gallery);
-  });
-};
-useLocalGallery(anniversaryGallery, anniversaryPhotos);
-const kweyolGallery = document.querySelector('#school-activities .event-card:nth-child(2) .photo-strip');
-const kweyolPhotos = [
-  ['assets/kweyol-1.jpg', 'Students performing at the Jounen Kweyol celebration'],
-  ['assets/kweyol-2.jpg', 'Student taking part in the Jounen Kweyol celebration'],
-  ['assets/kweyol-3.jpg', 'Student dancing at the Jounen Kweyol celebration']
-];
-useLocalGallery(kweyolGallery, kweyolPhotos);
-const sportsDayGallery = document.querySelector('#school-activities .event-card:nth-child(3) .photo-strip');
-const sportsDayPhotos = [
-  ['assets/sports-day-1.jpg', 'Students competing during Sports Day'],
-  ['assets/sports-day-2.jpg', 'Students gathered during Sports Day'],
-  ['assets/sports-day-3.jpg', 'School Sports Day activity']
-];
-useLocalGallery(sportsDayGallery, sportsDayPhotos);
-[anniversaryGallery, kweyolGallery, sportsDayGallery].forEach(startAutoSlideshow);
+  window.setInterval(() => showSlide((activeIndex + 1) % images.length), 3500);
+});
 const activities = document.querySelector('#school-activities');
 if (activities) {
   const lightbox = document.createElement('dialog');
