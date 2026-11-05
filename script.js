@@ -77,12 +77,12 @@ document.querySelectorAll('#past-student-profiles .past-student img').forEach((i
 // Keep every slideshow strictly inside its own activity card.
 // Each card gets its own image list, active slide, indicators, and timer.
 const activityCards = [...document.querySelectorAll('#school-activities .event-card')];
-// Stagger slide changes from right to left, moving down through each row.
+// Stagger slide changes from left to right, moving down through each row.
 const rightToLeftOrder = [...activityCards].sort((a, b) => {
   const aRect = a.getBoundingClientRect();
   const bRect = b.getBoundingClientRect();
   if (Math.abs(aRect.top - bRect.top) > 20) return aRect.top - bRect.top;
-  return bRect.left - aRect.left;
+  return aRect.left - bRect.left;
 });
 activityCards.forEach(card => {
   const staggerIndex = rightToLeftOrder.indexOf(card);
@@ -132,7 +132,7 @@ activityCards.forEach(card => {
   function startTimer() {
     window.clearTimeout(startDelay);
     window.clearInterval(timer);
-    // Each card starts 500 ms after the card to its right; the cadence
+    // Each card starts 500 ms after the card to its left; the cadence
     // remains staggered on every cycle instead of switching in unison.
     startDelay = window.setTimeout(() => {
       timer = window.setInterval(() => {
