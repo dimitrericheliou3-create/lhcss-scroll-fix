@@ -80,6 +80,27 @@ const anniversaryPhotos = [
   ['assets/anniversary-2.jpg', 'Students taking part in the anniversary parade'],
   ['assets/anniversary-3.jpg', 'School community gathered for the anniversary event']
 ];
+const startAutoSlideshow = gallery => {
+  if (!gallery) return;
+  if (gallery.autoSlideTimer) window.clearInterval(gallery.autoSlideTimer);
+  const showSlide = index => {
+    const images = [...gallery.querySelectorAll('img')];
+    if (!images.length) return;
+    images.forEach((image, imageIndex) => {
+      image.classList.toggle('is-active', imageIndex === index);
+      image.setAttribute('aria-hidden', imageIndex === index ? 'false' : 'true');
+    });
+    gallery.dataset.activeSlide = String(index);
+  };
+  gallery.classList.add('is-auto-slideshow');
+  showSlide(0);
+  gallery.autoSlideTimer = window.setInterval(() => {
+    const images = gallery.querySelectorAll('img');
+    if (images.length < 2) return;
+    const current = Number(gallery.dataset.activeSlide || 0);
+    showSlide((current + 1) % images.length);
+  }, 3500);
+};
 const useLocalGallery = (gallery, photos) => {
   if (!gallery) return;
   Promise.all(photos.map(([src]) => new Promise(resolve => {
@@ -91,6 +112,7 @@ const useLocalGallery = (gallery, photos) => {
     if (allLoaded.every(Boolean)) {
       gallery.innerHTML = photos.map(([src, alt]) => `<img src="${src}" alt="${alt}">`).join('');
     }
+    startAutoSlideshow(gallery);
   });
 };
 useLocalGallery(anniversaryGallery, anniversaryPhotos);
@@ -108,6 +130,7 @@ const sportsDayPhotos = [
   ['assets/sports-day-3.jpg', 'School Sports Day activity']
 ];
 useLocalGallery(sportsDayGallery, sportsDayPhotos);
+[anniversaryGallery, kweyolGallery, sportsDayGallery].forEach(startAutoSlideshow);
 const activities = document.querySelector('#school-activities');
 if (activities) {
   const lightbox = document.createElement('dialog');
