@@ -75,21 +75,49 @@ document.querySelectorAll('#past-student-profiles .past-student img').forEach((i
   }
 });
 const activityGalleries = [...document.querySelectorAll('#school-activities .event-card .photo-strip')];
-activityGalleries.forEach(gallery => {
+activityGalleries.forEach((gallery, galleryIndex) => {
   const images = [...gallery.querySelectorAll('img')];
   if (images.length < 2) return;
   gallery.classList.add('is-auto-slideshow');
+  const indicators = document.createElement('div');
+  indicators.className = 'slideshow-indicators';
+  indicators.setAttribute('role', 'group');
+  indicators.setAttribute('aria-label', 'Choose activity photo');
   let activeIndex = 0;
+  let timer;
+  const dots = images.map((image, index) => {
+    const dot = document.createElement('button');
+    dot.className = 'slideshow-dot';
+    dot.type = 'button';
+    dot.setAttribute('aria-label', `Show image ${index + 1}`);
+    dot.setAttribute('aria-pressed', 'false');
+    dot.addEventListener('click', () => {
+      showSlide(index);
+      startTimer();
+    });
+    indicators.appendChild(dot);
+    return dot;
+  });
   const showSlide = index => {
     images.forEach((image, imageIndex) => {
       const active = imageIndex === index;
       image.classList.toggle('is-active', active);
       image.setAttribute('aria-hidden', String(!active));
     });
+    dots.forEach((dot, dotIndex) => {
+      const active = dotIndex === index;
+      dot.classList.toggle('is-active', active);
+      dot.setAttribute('aria-pressed', String(active));
+    });
     activeIndex = index;
   };
+  const startTimer = () => {
+    window.clearInterval(timer);
+    timer = window.setInterval(() => showSlide((activeIndex + 1) % images.length), 3500);
+  };
   showSlide(0);
-  window.setInterval(() => showSlide((activeIndex + 1) % images.length), 3500);
+  gallery.after(indicators);
+  startTimer();
 });
 const activities = document.querySelector('#school-activities');
 if (activities) {
