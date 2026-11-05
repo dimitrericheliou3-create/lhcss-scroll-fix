@@ -162,3 +162,33 @@ footer a { color:#bde0ca; cursor:pointer; text-decoration:underline; }
 #school-activities .photo-strip.is-auto-slideshow { display:block !important; height:338px; overflow:hidden; padding:0 !important; }
 #school-activities .photo-strip.is-auto-slideshow img { display:none !important; width:100% !important; height:100% !important; margin:0 !important; flex:none !important; object-fit:cover; }
 #school-activities .photo-strip.is-auto-slideshow img.is-active { display:block !important; }
+
+
+/* Hollow slide indicators; the current photograph is shown with a filled circle. */
+#school-activities .slideshow-indicators {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  padding:14px 12px 20px;
+}
+#school-activities .slideshow-dot {
+  display:block;
+  width:12px;
+  height:12px;
+  flex:0 0 12px;
+  padding:0;
+  border:2px solid #d4af37;
+  border-radius:50%;
+  background:transparent;
+  cursor:pointer;
+  transition:background-color .2s ease, transform .2s ease;
+}
+#school-activities .slideshow-dot.is-active {
+  background:#d4af37;
+  transform:scale(1.12);
+}
+#school-activities .slideshow-dot:focus-visible {
+  outline:2px solid #ffffff;
+  outline-offset:3px;
+}
