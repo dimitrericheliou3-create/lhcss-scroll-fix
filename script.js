@@ -74,22 +74,28 @@ document.querySelectorAll('#past-student-profiles .past-student img').forEach((i
     image.alt = pastStudentPhotos[index][1];
   }
 });
-const activityGalleries = [...document.querySelectorAll('#school-activities .event-card .photo-strip')];
-activityGalleries.forEach((gallery, galleryIndex) => {
-  const images = [...gallery.querySelectorAll('img')];
+// Keep every slideshow strictly inside its own activity card.
+// Each card gets its own image list, active slide, indicators, and timer.
+document.querySelectorAll('#school-activities .event-card').forEach((card, cardIndex) => {
+  const gallery = card.querySelector(':scope > .photo-strip');
+  if (!gallery) return;
+  const images = [...gallery.querySelectorAll(':scope > img')];
   if (images.length < 2) return;
+
   gallery.classList.add('is-auto-slideshow');
   const indicators = document.createElement('div');
   indicators.className = 'slideshow-indicators';
   indicators.setAttribute('role', 'group');
-  indicators.setAttribute('aria-label', 'Choose activity photo');
+  indicators.setAttribute('aria-label', `Choose ${card.querySelector('.event-copy h3')?.textContent || 'activity'} photo`);
+
   let activeIndex = 0;
-  let timer;
+  let timer = null;
+
   const dots = images.map((image, index) => {
     const dot = document.createElement('button');
     dot.className = 'slideshow-dot';
     dot.type = 'button';
-    dot.setAttribute('aria-label', `Show image ${index + 1}`);
+    dot.setAttribute('aria-label', `Show photo ${index + 1}`);
     dot.setAttribute('aria-pressed', 'false');
     dot.addEventListener('click', () => {
       showSlide(index);
@@ -98,7 +104,8 @@ activityGalleries.forEach((gallery, galleryIndex) => {
     indicators.appendChild(dot);
     return dot;
   });
-  const showSlide = index => {
+
+  function showSlide(index) {
     images.forEach((image, imageIndex) => {
       const active = imageIndex === index;
       image.classList.toggle('is-active', active);
@@ -110,11 +117,15 @@ activityGalleries.forEach((gallery, galleryIndex) => {
       dot.setAttribute('aria-pressed', String(active));
     });
     activeIndex = index;
-  };
-  const startTimer = () => {
+  }
+
+  function startTimer() {
     window.clearInterval(timer);
-    timer = window.setInterval(() => showSlide((activeIndex + 1) % images.length), 3500);
-  };
+    timer = window.setInterval(() => {
+      showSlide((activeIndex + 1) % images.length);
+    }, 3500);
+  }
+
   showSlide(0);
   gallery.after(indicators);
   startTimer();
