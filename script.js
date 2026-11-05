@@ -76,7 +76,16 @@ document.querySelectorAll('#past-student-profiles .past-student img').forEach((i
 });
 // Keep every slideshow strictly inside its own activity card.
 // Each card gets its own image list, active slide, indicators, and timer.
-document.querySelectorAll('#school-activities .event-card').forEach((card, cardIndex) => {
+const activityCards = [...document.querySelectorAll('#school-activities .event-card')];
+// Stagger slide changes from right to left, moving down through each row.
+const rightToLeftOrder = [...activityCards].sort((a, b) => {
+  const aRect = a.getBoundingClientRect();
+  const bRect = b.getBoundingClientRect();
+  if (Math.abs(aRect.top - bRect.top) > 20) return aRect.top - bRect.top;
+  return bRect.left - aRect.left;
+});
+activityCards.forEach(card => {
+  const staggerIndex = rightToLeftOrder.indexOf(card);
   const gallery = card.querySelector(':scope > .photo-strip');
   if (!gallery) return;
   const images = [...gallery.querySelectorAll(':scope > img')];
@@ -90,6 +99,7 @@ document.querySelectorAll('#school-activities .event-card').forEach((card, cardI
 
   let activeIndex = 0;
   let timer = null;
+  let startDelay = null;
 
   const dots = images.map((image, index) => {
     const dot = document.createElement('button');
@@ -120,10 +130,15 @@ document.querySelectorAll('#school-activities .event-card').forEach((card, cardI
   }
 
   function startTimer() {
+    window.clearTimeout(startDelay);
     window.clearInterval(timer);
-    timer = window.setInterval(() => {
-      showSlide((activeIndex + 1) % images.length);
-    }, 3500);
+    // Each card starts 500 ms after the card to its right; the cadence
+    // remains staggered on every cycle instead of switching in unison.
+    startDelay = window.setTimeout(() => {
+      timer = window.setInterval(() => {
+        showSlide((activeIndex + 1) % images.length);
+      }, 3500);
+    }, staggerIndex * 500);
   }
 
   showSlide(0);
