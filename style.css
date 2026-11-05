@@ -4,8 +4,8 @@ html { scroll-behavior:smooth; }
 body { margin:0; color:var(--ink); background:var(--white); font-family: Georgia, 'Times New Roman', serif; }
 a { color:inherit; }
 .topbar { position:fixed; top:0; right:0; left:0; z-index:51; padding:12px 6vw; color:#d8eee3; background:rgba(13,61,44,.72); font:11px 'Trebuchet MS', sans-serif; letter-spacing:.13em; text-align:right; text-transform:uppercase; box-shadow:0 8px 20px rgba(4,24,17,.12); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
-header { overflow:hidden; padding:80px 6vw 95px; color:white; background:linear-gradient(120deg, #0d3d2c 0%, #176b4d 62%, #6eaa81 150%); }
-nav { position:fixed; top:34px; right:0; left:0; z-index:50; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:14px 6vw; font:700 12px 'Trebuchet MS', sans-serif; letter-spacing:.08em; text-transform:uppercase; background:rgba(13,61,44,.72); box-shadow:0 8px 20px rgba(4,24,17,.12); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
+header { position:relative; overflow:hidden; padding:80px 6vw 95px; color:white; background:linear-gradient(120deg, #0d3d2c 0%, #176b4d 62%, #6eaa81 150%); }
+nav { position:absolute; top:34px; right:0; left:0; z-index:50; display:flex; align-items:center; justify-content:space-between; gap:24px; padding:14px 6vw; font:700 12px 'Trebuchet MS', sans-serif; letter-spacing:.08em; text-transform:uppercase; background:rgba(13,61,44,.72); box-shadow:0 8px 20px rgba(4,24,17,.12); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
 body.is-scrolled .topbar { background:rgba(13,61,44,.72); box-shadow:0 8px 20px rgba(4,24,17,.12); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
 body.is-scrolled nav { background:rgba(13,61,44,.72); box-shadow:0 8px 20px rgba(4,24,17,.12); -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); }
 nav a { text-decoration:none; }
