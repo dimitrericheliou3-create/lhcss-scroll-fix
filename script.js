@@ -153,8 +153,5 @@ backToTop.setAttribute('aria-label', 'Back to top');
 backToTop.textContent = '↑';
 document.body.appendChild(backToTop);
 const updateBackToTop = () => backToTop.classList.toggle('is-visible', window.scrollY > 500);
-const updateHeaderState = () => document.body.classList.toggle('is-scrolled', window.scrollY > 20);
 window.addEventListener('scroll', updateBackToTop, { passive: true });
-window.addEventListener('scroll', updateHeaderState, { passive: true });
 updateBackToTop();
-updateHeaderState();
